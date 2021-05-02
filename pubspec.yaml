@@ -23,6 +23,9 @@ environment:
 dependencies:
   provider: ^5.0.0
   image_picker: ^0.7.4
+  path: ^1.8.0
+  path_provider: ^2.0.1
+  sqflite: ^2.0.0+3
   flutter:
     sdk: flutter
 
