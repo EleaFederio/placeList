@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:place_list/helpers/location_helper.dart';
+import 'package:place_list/screens/map_screen.dart';
 
 class LocationInput extends StatefulWidget {
   @override
@@ -8,24 +9,34 @@ class LocationInput extends StatefulWidget {
 }
 
 class _LocationInputState extends State<LocationInput> {
+
+  String _previewImageUrl;
+
+  Future<void> _getUserCurrentLocation() async {
+    final locationData = await Location().getLocation();
+    final staticMapImageUrl = LocationHelper.generateLocationPreviewImage(
+      latitude: locationData.latitude,
+      longitude: locationData.longitude,
+    );
+    print('***********************************************');
+    print(staticMapImageUrl);
+    print('***********************************************');
+    setState(() {
+      _previewImageUrl = staticMapImageUrl;
+    });
+  }
+
+  Future<void> _selectOnMap() async {
+    final selectedLocatiion = await Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => MapScreen(isSelecting: true,)
+    ));
+    if(selectedLocatiion == null){
+      return;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-
-    String _previewImageUrl;
-
-    Future<void> _getUserCurrentLocation() async {
-      final locationData = await Location().getLocation();
-      final staticMapImageUrl = LocationHelper.generateLocationPreviewImage(
-        latitude: locationData.latitude,
-        longitude: locationData.longitude,
-      );
-      print('***********************************************');
-      print(staticMapImageUrl);
-      print('***********************************************');
-      setState(() {
-        _previewImageUrl = staticMapImageUrl;
-      });
-    }
 
     return Column(
       children: <Widget>[
@@ -63,9 +74,7 @@ class _LocationInputState extends State<LocationInput> {
             icon: Icon(Icons.map),
             label: Text('Select on Map'),
             textColor: Theme.of(context).primaryColor,
-            onPressed: (){
-
-            },
+            onPressed: _selectOnMap,
           )
         ],)
       ],
